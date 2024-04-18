@@ -2,6 +2,7 @@
 """ Console Module """
 import cmd
 import sys
+import shlex
 from models.base_model import BaseModel
 from models.__init__ import storage
 from models.user import User
@@ -73,7 +74,7 @@ class HBNBCommand(cmd.Cmd):
                 pline = pline[2].strip()  # pline is now str
                 if pline:
                     # check for *args or **kwargs
-                    if pline[0] is '{' and pline[-1] is'}'\
+                    if pline[0] == '{' and pline[-1] == '}'\
                             and type(eval(pline)) is dict:
                         _args = pline
                     else:
@@ -114,17 +115,38 @@ class HBNBCommand(cmd.Cmd):
         pass
 
     def do_create(self, args):
-        """ Create an object of any class"""
-        if not args:
-            print("** class name missing **")
-            return
-        elif args not in HBNBCommand.classes:
-            print("** class doesn't exist **")
-            return
-        new_instance = HBNBCommand.classes[args]()
-        storage.save()
+        """
+        Create a new instance of a given class with specified parameters.
+
+        Args:
+        args (str): The arguments string in the format:
+               '<Class name> <param 1> <param 2> <param 3>...'
+               where each param is in the format: '<key name>=<value>'
+        """
+    args = shlex.split(args)
+    if len(args) < 1:
+        print("** class name missing **")
+    elif args[0] not in HBNBCommand.classes:
+        print("** class doesn't exist **")
+        return
+    else:
+        new_instance = HBNBCommand.classes[args[0]]()
+        if len(args) > 1:
+            for param in args[1:]:
+                try:
+                    key, value = param.split('=')
+                    if value[0] == '\"' and value[-1] == '\"':
+                        value = value[1:-1].replace('_', ' ')
+                        value = value.replace('\\\"', '\"')
+                    elif '.' in value:
+                        value = float(value)
+                    else:
+                        value = int(value)
+                    setattr(new_instance, key, value)
+                except Exception as e:
+                    pass
         print(new_instance.id)
-        storage.save()
+        new_instance.save()
 
     def help_create(self):
         """ Help information for the create method """
@@ -319,6 +341,7 @@ class HBNBCommand(cmd.Cmd):
         """ Help information for the update class """
         print("Updates an object with new information")
         print("Usage: update <className> <id> <attName> <attVal>\n")
+
 
 if __name__ == "__main__":
     HBNBCommand().cmdloop()

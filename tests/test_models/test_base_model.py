@@ -97,3 +97,13 @@ class test_basemodel(unittest.TestCase):
         n = new.to_dict()
         new = BaseModel(**n)
         self.assertFalse(new.created_at == new.updated_at)
+
+    def test_do_create_with_params(self):
+        """ Test the do_create method with parameters """
+        console = Console()
+        console.do_create('BaseModel name="My_little_house" number=1234')
+        # Retrieve the created object and verify its attributes
+        created_object_id = console.last_created_object_id
+        created_object = storage.all()['BaseModel.' + created_object_id]
+        self.assertEqual(created_object.name, 'My little house')
+        self.assertEqual(created_object.number, 1234)
