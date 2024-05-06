@@ -37,7 +37,7 @@ echo "<html>
 rm -f /data/web_static/current && ln -s /data/web_static/releases/test/ /data/web_static/current || error_exit "Failed to create symbolic link"
 
 # Change ownership of the "data" directory
-chown -R ${USER}:${USER} /data || error_exit "Failed to change ownership of /data directory"
+chown -R ubuntu:ubuntu /data || error_exit "Failed to change ownership of /data directory"
 
 # Modify the Nginx configuration
 sed -i '26i\    location /hbnb_static/ {\n        alias /data/web_static/current/;\n    }' /etc/nginx/sites-available/default || error_exit "Failed to modify Nginx configuration"
