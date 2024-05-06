@@ -34,7 +34,7 @@ echo "<html>
 </html>" > /data/web_static/releases/test/index.html
 
 # Create a symbolic link
-rm -f /data/web_static/current && ln -s /data/web_static/releases/test/ /data/web_static/current || error_exit "Failed to create symbolic link"
+rm -f /data/web_static/current && ln -s /data/web_static/releases/test/ /data/web_static/current
 
 # Change ownership of the "data" directory
 chown -R ubuntu:ubuntu /data || error_exit "Failed to change ownership of /data directory"
