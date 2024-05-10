@@ -2,12 +2,11 @@
 """
 Using fabric to compress files before uploading them to an my server
 """
-from fabric import task
 import os
 from datetime import datetime
+from fabric import Connection
 
 
-@task
 def do_pack(c):
     """
     Compresses the 'web_static' directory into a tar archive and saves it in the 'versions' directory.
@@ -23,6 +22,7 @@ def do_pack(c):
 
     arch_path = os.path.join("versions", arch_name)
 
+    c=Connection('localhost')
     with c.cd('web_static'):
         res = c.run(f"tar -cvzf {arch_path} .")
 
