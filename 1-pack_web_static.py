@@ -7,7 +7,7 @@ from datetime import datetime
 from fabric import Connection
 
 
-def do_pack(c):
+def do_pack():
     """
     Compresses the 'web_static' directory into a tar archive and saves it in the 'versions' directory.
 
