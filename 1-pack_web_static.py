@@ -11,16 +11,6 @@ from datetime import datetime
 def do_pack(c):
     """
     Compresses the 'web_static' directory into a tar archive and saves it in the 'versions' directory.
-    
-    This function uses the tar command to create a .tgz archive of the 'web_static'
-    directory. The archive is named using a timestamp in the format:
-    "web_static_YYYYMMDDHHMMSS.tgz".
-    
-    The function returns the path of the created archive if successful, None
-    otherwise.
-    
-    Parameters:
-        c (Connection): The connection object used to execute the command.
     """
     """ Create the 'versions' directory if it doesn't exist """
     if not os.path.exists('versions'):
