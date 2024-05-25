@@ -1,32 +1,21 @@
 #!/usr/bin/python3
 """
-Using fabric to compress files before uploading them to an my server
+Fabric script that generates a tgz archive from the contents of the web_static folder of the AirBnB Clone repo
 """
-import os
+
 from datetime import datetime
-from fabric import Connection
+from fabric.api import local
+from os.path import isdir
 
 
 def do_pack():
-    """
-    Compresses the 'web_static' directory into a tar archive and saves it in the 'versions' directory.
-
-    """
-    if not os.path.exists('versions'):
-        os.makedirs('versions')
-
-    now = datetime.now()
-    timestamp = now.strftime("%Y%m%d%H%M%S")
-
-    arch_name = f"web_static_{timestamp}.tgz"
-
-    arch_path = os.path.join("versions", arch_name)
-
-    c=Connection('localhost')
-    with c.cd('web_static'):
-        res = c.run(f"tar -cvzf {arch_path} .")
-
-    if res.failed:
-        return (None)
-
-    return (arch_path)
+    """generates a tgz archive"""
+    try:
+        date = datetime.now().strftime("%Y%m%d%H%M%S")
+        if isdir("versions") is False:
+            local("mkdir versions")
+        file_name = "versions/web_static_{}.tgz".format(date)
+        local("tar -cvzf {} web_static".format(file_name))
+        return file_name
+    except:
+        return None

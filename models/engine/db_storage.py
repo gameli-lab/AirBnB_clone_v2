@@ -3,6 +3,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
 import os
 
+
 class DBStorage:
     __engine = None
     __session = None
@@ -51,6 +52,17 @@ class DBStorage:
             bind=self.__engine, expire_on_commit=False)
         Session = scoped_session(session_factory)
         self.__session = Session
+    
+    def get(self, cls, id):
+        if cls is None or id is None:
+            return None
+        return self.__session.query(cls).get(id)
+
+    def count(self, cls=None):
+        if cls is None:
+            return len(self.all())
+        else:
+            return len(self.all(cls))
 
     def close(self):
         self.__session.remove()
